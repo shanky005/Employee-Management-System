@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
+
 const Employee = require("../models/Employee");
 const authMiddleware = require("../middleware/authMiddleware");
+const authorizeRoles = require("../middleware/roleMiddleware");
 
-router.get("/", authMiddleware, async (req, res) => {
+router.get("/", authMiddleware,  async (req, res) => {
   const employees = await Employee.find();
 
   res.json(employees);
@@ -14,7 +16,7 @@ router.get("/", authMiddleware, async (req, res) => {
 //   res.json(employees);
 // });
 
-router.post("/employees", authMiddleware, async (req, res) => {
+router.post("/employees", authMiddleware, authorizeRoles("admin", "hr"), async (req, res) => {
   const employee = new Employee(req.body);
 
   const saved = await employee.save();
@@ -30,7 +32,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
   res.json(updated);
 });
 
-router.delete("/:id", authMiddleware, async (req, res) => {
+router.delete("/:id", authMiddleware, authorizeRoles("admin"), async (req, res) => {
   await Employee.findByIdAndDelete(req.params.id);
 
   res.json({ message: "Employee deleted" });

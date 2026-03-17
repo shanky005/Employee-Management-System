@@ -8,26 +8,17 @@ import EmployeeList from "./components/EmployeeList";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const token = localStorage.getItem("token");
-
   return (
     <BrowserRouter>
-
       <Routes>
-
         <Route path="/register" element={<Register />} />
 
         <Route path="/" element={<Login />} />
 
-        <Route
-          path="/employees"
-          element={<EmployeeList />}
-        />
-
+        <Route path="/employees" element={<EmployeeList />} />
       </Routes>
-
     </BrowserRouter>
-    
+
     // <div className="container mt-4">
     //   <h1 className="bg-secondary text-white p-3 text-center">Employee Management</h1>
     //   <AddEmployee />

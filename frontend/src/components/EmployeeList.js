@@ -19,6 +19,8 @@ function EmployeeList() {
     salary: "",
   });
 
+  const role = localStorage.getItem("role");
+
   const [loading, setLoading] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -146,6 +148,7 @@ function EmployeeList() {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
 
     window.location.href = "/";
   };
@@ -209,6 +212,8 @@ function EmployeeList() {
               <td>{emp.email}</td>
               <td>{emp.department}</td>
               <td>
+
+                {(role === "admin" || role ==="hr") &&  (
                 <Button
                   size="sm"
                   variant="warning"
@@ -216,6 +221,9 @@ function EmployeeList() {
                 >
                   Edit
                 </Button>
+                )}
+
+                {role === "admin" && (
 
                 <Button
                   size="sm"
@@ -225,6 +233,7 @@ function EmployeeList() {
                 >
                   Delete
                 </Button>
+                )}
               </td>
             </tr>
           ))}

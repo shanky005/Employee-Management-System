@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 // REGISTER
 router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -14,6 +14,7 @@ router.post("/register", async (req, res) => {
     name,
     email,
     password: hashedPassword,
+    role,
   });
 
   await user.save();
@@ -37,11 +38,13 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Invalid password" });
   }
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
 
-  res.json({ token });
+  const role = user.role;
+
+  res.json({ token, role });
 });
 
 module.exports = router;
