@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { addEmployee } from "../api";
 import { toast } from "react-toastify";
 
-function AddEmployee() {
+function AddEmployee({ refresh }) {
   const [employee, setEmployee] = useState({
     name: "",
     email: "",
@@ -19,18 +19,32 @@ function AddEmployee() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!employee.name  || !employee.department || !employee.email || !employee.salary){
-        alert("All Fields mandatory");
-        return;
+    if (
+      !employee.name ||
+      !employee.department ||
+      !employee.email ||
+      !employee.salary
+    ) {
+      alert("All Fields mandatory");
+      return;
     }
     await addEmployee(employee);
+    
+    refresh();
+
     toast.success("Employee Added Successfully 🎉");
+
+    // reset form
+    setEmployee({
+      name: "",
+      email: "",
+      department: "",
+      salary: ""
+    });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-    >
+    <form onSubmit={handleSubmit}>
       <div className="row">
         <div className="col">
           <input

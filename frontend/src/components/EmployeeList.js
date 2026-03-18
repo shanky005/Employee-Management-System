@@ -37,7 +37,6 @@ function EmployeeList() {
     }
 
     loadEmployees();
-
   }, []);
 
   const loadEmployees = async () => {
@@ -134,6 +133,13 @@ function EmployeeList() {
       emp.department.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+
+    // Reset to first page
+    setCurrentPage(1);
+  };
+
   // Pagination Logic
 
   const indexOfLastEmployee = currentPage * employeesPerPage;
@@ -181,7 +187,7 @@ function EmployeeList() {
 
       <EmployeeAnalytics employees={employees} />
       <h6>Add Employee</h6>
-      <AddEmployee />
+      <AddEmployee refresh={loadEmployees} />
 
       {/* Search Box */}
       <h6 className="mt-2">Search</h6>
@@ -190,7 +196,7 @@ function EmployeeList() {
         placeholder="Search by name or department"
         value={search}
         className="form-control mb-3"
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={handleSearch}
       />
 
       <table className="table table-bordered">
@@ -212,27 +218,25 @@ function EmployeeList() {
               <td>{emp.email}</td>
               <td>{emp.department}</td>
               <td>
-
-                {(role === "admin" || role ==="hr") &&  (
-                <Button
-                  size="sm"
-                  variant="warning"
-                  onClick={() => handleEditClick(emp)}
-                >
-                  Edit
-                </Button>
+                {(role === "admin" || role === "hr") && (
+                  <Button
+                    size="sm"
+                    variant="warning"
+                    onClick={() => handleEditClick(emp)}
+                  >
+                    Edit
+                  </Button>
                 )}
 
                 {role === "admin" && (
-
-                <Button
-                  size="sm"
-                  variant="danger"
-                  className="ms-2"
-                  onClick={() => handleDelete(emp._id)}
-                >
-                  Delete
-                </Button>
+                  <Button
+                    size="sm"
+                    variant="danger"
+                    className="ms-2"
+                    onClick={() => handleDelete(emp._id)}
+                  >
+                    Delete
+                  </Button>
                 )}
               </td>
             </tr>
@@ -254,6 +258,9 @@ function EmployeeList() {
             {index + 1}
           </button>
         ))}
+        {filteredEmployees.length === 0 && (
+          <p>No employees found</p>
+        )}
       </div>
 
       <ToastContainer position="top-right" autoClose={3000} />
